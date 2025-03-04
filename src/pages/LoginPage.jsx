@@ -1,17 +1,18 @@
 import React, { useState, useContext } from "react";
 import { Button, Card, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; // Asegúrate de importar el contexto
+import { AuthContext } from "../context/AuthContext"; 
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Obtén la función login desde el contexto
+  const { login } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      // Usamos la variable de entorno para la URL
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -45,16 +46,14 @@ const LoginPage = () => {
           <Form.Item
             label="Correo Electrónico"
             name="email"
-            rules={[{ required: true, message: "Ingrese su correo!" }]}
-          >
+            rules={[{ required: true, message: "Ingrese su correo!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Contraseña"
             name="password"
-            rules={[{ required: true, message: "Ingrese su contraseña!" }]}
-          >
+            rules={[{ required: true, message: "Ingrese su contraseña!" }]}>
             <Input.Password />
           </Form.Item>
 

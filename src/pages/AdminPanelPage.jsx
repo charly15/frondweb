@@ -2,9 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+// Cambia la URL de la API a la variable de entorno
 const getUsersFromAPI = async () => {
   try {
-    const response = await fetch("http://localhost:5000/api/users");
+    // Usamos la variable de entorno REACT_APP_API_URL
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users`);
     if (!response.ok) throw new Error("Error al obtener los usuarios");
     const usersData = await response.json();
     return usersData;
@@ -43,7 +45,8 @@ const AdminPanelPage = () => {
     setUsers(users.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
 
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+      // Usamos la variable de entorno REACT_APP_API_URL
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: newRole }),

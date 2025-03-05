@@ -5,8 +5,9 @@ import dayjs from "dayjs";
 import { API_URL } from "../config";
 
 
-// Usamos una variable de entorno para la URL de la API
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tasks`; 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/tasks`
+  : "http://localhost:5000/api/tasks";
 
 const DashboardPage = () => {
   const [visible, setVisible] = useState(false);

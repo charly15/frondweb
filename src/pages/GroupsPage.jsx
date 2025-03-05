@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Form, Input, Card, Select, message } from "antd";
 
-const API_URL = "http://localhost:5000/api/groups"; 
-const USERS_API_URL = "http://localhost:5000/api/groups/users";  
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/groups`;
+const USERS_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/groups/users`;
+
 
 const GroupsPage = () => {
   const [visible, setVisible] = useState(false);

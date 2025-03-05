@@ -44,4 +44,26 @@ export const getTasks = async (token) => {
   }
 };
 
+
+
+export const getUsers = async () => {
+  try {
+    const response = await api.get('/users');
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener los usuarios:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateUserRole = async (userId, newRole) => {
+  try {
+    const response = await api.patch(`/users/${userId}`, { role: newRole });
+    return response.data;
+  } catch (error) {
+    console.error('Error al cambiar el rol del usuario:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export default api;

@@ -3,6 +3,7 @@ import { Button, Modal, Form, Input, Select, Card, message, Row, Col, DatePicker
 import axios from "axios";
 import dayjs from "dayjs";
 
+
 const DashboardPage = () => {
   const [visible, setVisible] = useState(false);
   const [tasks, setTasks] = useState([]);
@@ -13,7 +14,7 @@ const DashboardPage = () => {
   const fetchTasks = async () => {
     if (!userId) return;
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/${userId}`);
+      const response = await axios.get(`http://localhost:5000/api/tasks/${userId}`);
       setTasks(response.data.tasks);
     } catch (error) {
       message.error("Error al obtener tareas");
@@ -34,14 +35,14 @@ const DashboardPage = () => {
 
     try {
       if (editingTask) {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/tasks/${userId}/${editingTask.id}`, {
+        await axios.put(`http://localhost:5000/api/tasks/${userId}/${editingTask.id}`, {
           userId,
           ...values,
           timeUntilFinish: values.timeUntilFinish.format("YYYY-MM-DD"),
         });
         message.success("Tarea actualizada");
       } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/tasks`, {
+        await axios.post("http://localhost:5000/api/tasks", {
           userId,
           ...values,
           timeUntilFinish: values.timeUntilFinish.format("YYYY-MM-DD"),
@@ -68,16 +69,18 @@ const DashboardPage = () => {
   };
 
   const handleDelete = async (taskId) => {
-    const userId = localStorage.getItem("userId");
-
+    const userId = localStorage.getItem("userId"); 
+  
+  
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/tasks/${userId}/${taskId}`);
+      const response = await axios.delete(`http://localhost:5000/api/tasks/${userId}/${taskId}`);
 
-      fetchTasks();
+      fetchTasks(); 
     } catch (error) {
-      message.error("Error al eliminar la tarea");
+      
     }
   };
+  
 
   const groupedTasks = {
     "En Progreso": [],

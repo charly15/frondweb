@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Button, Card, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; 
+import { AuthContext } from "../context/AuthContext";
+import { loginUser } from "../services/api"; 
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -11,30 +12,17 @@ const LoginPage = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      // Usamos la variable de entorno para la URL
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.msg || "Error al iniciar sesión");
-
-      // Usamos la función login del contexto para actualizar el estado y guardar el usuario
+      const data = await loginUser(values); 
+      
+     
       login(data.token, { userId: data.userId, email: values.email, role: data.role });
-
+      
       message.success("Inicio de sesión exitoso!");
 
-      // Redirigir al dashboard o panel de administración dependiendo del rol
-      if (data.role === "admin") {
-        navigate("/admin"); // Redirige al panel de administración
-      } else {
-        navigate("/dashboard"); // Redirige al dashboard
-      }
+      
+      navigate(data.role === "admin" ? "/admin" : "/dashboard");
     } catch (error) {
-      message.error(error.message);
+      message.error(error.response?.data?.msg || "Error al iniciar sesión");
     }
     setLoading(false);
   };
@@ -46,14 +34,16 @@ const LoginPage = () => {
           <Form.Item
             label="Correo Electrónico"
             name="email"
-            rules={[{ required: true, message: "Ingrese su correo!" }]}>
+            rules={[{ required: true, message: "Ingrese su correo!" }]}
+          >
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Contraseña"
             name="password"
-            rules={[{ required: true, message: "Ingrese su contraseña!" }]}>
+            rules={[{ required: true, message: "Ingrese su contraseña!" }]}
+          >
             <Input.Password />
           </Form.Item>
 

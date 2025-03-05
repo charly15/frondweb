@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal, Form, Input, Select, Card, message, Row, Col, DatePicker } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
+import { API_URL } from "../config";
+
 
 // Usamos una variable de entorno para la URL de la API
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tasks`; 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Form, Input, Card, Select, message } from "antd";
+import { API_URL } from "../config";
+
 
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/groups`;
 const USERS_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/groups/users`;

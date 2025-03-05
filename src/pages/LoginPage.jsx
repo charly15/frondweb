@@ -3,6 +3,8 @@ import { Button, Card, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { loginUser } from "../services/api"; 
+import { API_URL } from "../config";
+
 
 const LoginPage = () => {
   const navigate = useNavigate();

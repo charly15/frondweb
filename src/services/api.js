@@ -43,7 +43,7 @@ exports.registerUser = async (userData) => {
   }
 };
 
-exports.loginUser = async (credentials) => {
+export const loginUser = async (credentials) => {
   try {
     const response = await api.post("/auth/login", credentials);
     return response.data; 

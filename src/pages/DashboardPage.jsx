@@ -1,99 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Form, Input, Select, Card, message, Row, Col, DatePicker } from "antd";
-import axios from "axios";
-import dayjs from "dayjs";
-import { API_URL } from "../config";
-
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/tasks`
-  : "http://localhost:5000/api/tasks";
+import { fetchTasks, saveTask, deleteTask, prepareEditTask } from "../services/api";
 
 const DashboardPage = () => {
   const [visible, setVisible] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [form] = Form.useForm();
   const [editingTask, setEditingTask] = useState(null);
-  const userId = localStorage.getItem("userId");
 
-  // Obtener tareas desde la API
-  const fetchTasks = async () => {
-    if (!userId) return;
-    try {
-      const response = await axios.get(`${API_URL}/${userId}`);
-      setTasks(response.data.tasks);
-    } catch (error) {
-      message.error("Error al obtener tareas");
-    }
-  };
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.userId;
 
-  // Usamos useEffect para cargar las tareas cuando el componente se monta
   useEffect(() => {
     if (userId) {
-      fetchTasks();
+      fetchTasks(userId, setTasks);
     }
   }, [userId]);
 
-  // Función para manejar el envío de las tareas
-  const handleSubmit = async (values) => {
-    if (!userId) {
-      message.error("Usuario no autenticado");
-      return;
-    }
-
-    try {
-      if (editingTask) {
-        // Actualizamos una tarea existente
-        await axios.put(`${API_URL}/${userId}/${editingTask.id}`, {
-          userId,
-          ...values,
-          timeUntilFinish: values.timeUntilFinish.format("YYYY-MM-DD"),
-        });
-        message.success("Tarea actualizada");
-      } else {
-        // Creamos una nueva tarea
-        await axios.post(API_URL, {
-          userId,
-          ...values,
-          timeUntilFinish: values.timeUntilFinish.format("YYYY-MM-DD"),
-        });
-        message.success("Tarea guardada");
-      }
-
-      // Restablecer el formulario y actualizar la lista de tareas
-      form.resetFields();
-      setVisible(false);
-      setEditingTask(null);
-      fetchTasks();
-    } catch (error) {
-      message.error("Error al guardar la tarea");
-    }
+  const handleSubmit = (values) => {
+    saveTask(values, userId, form, setVisible, setEditingTask, () => fetchTasks(userId, setTasks));
   };
 
-  // Función para editar una tarea
   const handleEdit = (task) => {
-    setEditingTask(task);
-    form.setFieldsValue({
-      ...task,
-      timeUntilFinish: dayjs(task.timeUntilFinish),
-    });
-    setVisible(true);
+    prepareEditTask(task, setEditingTask, form, setVisible);
   };
 
-  // Función para eliminar una tarea
-  const handleDelete = async (taskId) => {
-    const userId = localStorage.getItem("userId"); 
-  
-    try {
-      const response = await axios.delete(`${API_URL}/${userId}/${taskId}`);
-
-      fetchTasks(); // Actualizamos las tareas después de la eliminación
-    } catch (error) {
-      message.error("Error al eliminar la tarea");
-    }
+  const handleDelete = (taskId) => {
+    deleteTask(taskId, userId, () => fetchTasks(userId, setTasks));
   };
 
-  // Agrupamos las tareas por estado
   const groupedTasks = {
     "En Progreso": [],
     "Pausado": [],

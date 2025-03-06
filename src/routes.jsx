@@ -13,25 +13,18 @@ import AuthProvider from "./context/AuthContext";
 const AppRoutes = () => {
   return (
     <Router>
-      <AuthProvider>
+      <AuthProvider> 
         <Routes>
+          {/* Rutas públicas */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
+          {/* Rutas protegidas */}
           <Route path="/" element={<MainLayout />}>
-            <Route
-              path="dashboard"
-              element={<ProtectedRoute element={<DashboardPage />} />}
-            />
-            <Route
-              path="groups"
-              element={<ProtectedRoute element={<GroupsPage />} />}
-            />
-             <Route
-              path="admin"
-              element={<ProtectedRoute element={<AdminPanelPage />} />}
-            />
+            <Route path="dashboard" element={<ProtectedRoute element={<DashboardPage />} />} />
+            <Route path="groups" element={<ProtectedRoute element={<GroupsPage />} />} />
+            <Route path="admin" element={<ProtectedRoute element={<AdminPanelPage />} />} />
           </Route>
         </Routes>
       </AuthProvider>

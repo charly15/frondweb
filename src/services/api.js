@@ -16,9 +16,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -33,7 +31,7 @@ api.interceptors.response.use(
   }
 );
 
-exports.registerUser = async (userData) => {
+export const registerUser = async (userData) => {
   try {
     const response = await api.post("/auth/register", userData);
     return response.data;
@@ -46,14 +44,14 @@ exports.registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await api.post("/auth/login", credentials);
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error al iniciar sesión:", error.response?.data || error.message);
     throw error;
   }
 };
 
-exports.getTasks = async (token) => {
+export const getTasks = async (token) => {
   try {
     const response = await api.get("/tasks", {
       headers: {
@@ -67,7 +65,7 @@ exports.getTasks = async (token) => {
   }
 };
 
-exports.getUsers = async () => {
+export const getUsers = async () => {
   try {
     const response = await api.get("/users");
     return response.data;
@@ -77,7 +75,7 @@ exports.getUsers = async () => {
   }
 };
 
-exports.updateUserRole = async (userId, newRole) => {
+export const updateUserRole = async (userId, newRole) => {
   try {
     const response = await api.patch(`/users/${userId}`, { role: newRole });
     return response.data;
@@ -87,7 +85,7 @@ exports.updateUserRole = async (userId, newRole) => {
   }
 };
 
-exports.fetchTasks = async (userId, setTasks) => {
+export const fetchTasks = async (userId, setTasks) => {
   if (!userId) {
     message.error("Usuario no autenticado");
     return;
@@ -100,7 +98,7 @@ exports.fetchTasks = async (userId, setTasks) => {
   }
 };
 
-exports.saveTask = async (values, userId, form, setVisible, setEditingTask, fetchTasks) => {
+export const saveTask = async (values, userId, form, setVisible, setEditingTask, fetchTasks) => {
   if (!userId) {
     message.error("Usuario no autenticado");
     return;
@@ -130,7 +128,7 @@ exports.saveTask = async (values, userId, form, setVisible, setEditingTask, fetc
   }
 };
 
-exports.deleteTask = async (taskId, userId, fetchTasks) => {
+export const deleteTask = async (taskId, userId, fetchTasks) => {
   if (!userId) {
     message.error("Usuario no autenticado");
     return;
@@ -143,7 +141,7 @@ exports.deleteTask = async (taskId, userId, fetchTasks) => {
   }
 };
 
-exports.prepareEditTask = (task, setEditingTask, form, setVisible) => {
+export const prepareEditTask = (task, setEditingTask, form, setVisible) => {
   setEditingTask(task);
   form.setFieldsValue({
     ...task,
@@ -152,7 +150,7 @@ exports.prepareEditTask = (task, setEditingTask, form, setVisible) => {
   setVisible(true);
 };
 
-exports.fetchGroups = async () => {
+export const fetchGroups = async () => {
   try {
     const response = await api.get("/groups");
     return response.data;
@@ -162,7 +160,7 @@ exports.fetchGroups = async () => {
   }
 };
 
-exports.fetchUsers = async () => {
+export const fetchUsers = async () => {
   try {
     const response = await api.get("/groups/users");
     return response.data;
@@ -172,9 +170,9 @@ exports.fetchUsers = async () => {
   }
 };
 
-exports.createGroup = async (groupData) => {
+export const createGroup = async (groupData) => {
   try {
-    const response = await api.post("/groups", groupData);
+    await api.post("/groups", groupData);
     message.success("Grupo creado");
     return true;
   } catch (error) {
